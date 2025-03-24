@@ -11,10 +11,11 @@ export function ProductPrice({price, compareAtPrice}) {
     <div className="product-price">
       {compareAtPrice ? (
         <div className="product-price-on-sale">
-          {price ? <Money data={price} /> : null}
           <s>
             <Money data={compareAtPrice} />
           </s>
+          <span className='absolute border-2 border-red-500 text-red-500 px-2 py-1 text-sm font-bold rounded-full top-2 left-2'>On Sale!</span>
+          {price ? <Money  className='text-red-500 font-bold' data={price} /> : null}
         </div>
       ) : price ? (
         <Money data={price} />
