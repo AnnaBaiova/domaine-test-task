@@ -1,21 +1,7 @@
-import {useNonce, getShopAnalytics, Analytics} from '@shopify/hydrogen';
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  useRouteError,
-  useRouteLoaderData,
-  ScrollRestoration,
-  isRouteErrorResponse,
-} from '@remix-run/react';
+import {getShopAnalytics} from '@shopify/hydrogen';
+import {Outlet, useRouteError, isRouteErrorResponse} from '@remix-run/react';
 import favicon from '~/assets/favicon.svg';
-import resetStyles from '~/styles/reset.css?url';
-import appStyles from '~/styles/app.css?url';
-import tailwindCss from './styles/tailwind.css?url';
-import {PageLayout} from '~/components/PageLayout';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
-import './styles/tailwind.css';
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -141,44 +127,6 @@ function loadDeferredData({context}) {
   };
 }
 
-/**
- * @param {{children?: React.ReactNode}}
- */
-export function Layout({children}) {
-  const nonce = useNonce();
-  /** @type {RootLoader} */
-  const data = useRouteLoaderData('root');
-
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={tailwindCss}></link>
-        <link rel="stylesheet" href={resetStyles}></link>
-        <link rel="stylesheet" href={appStyles}></link>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {data ? (
-          <Analytics.Provider
-            cart={data.cart}
-            shop={data.shop}
-            consent={data.consent}
-          >
-            <PageLayout {...data}>{children}</PageLayout>
-          </Analytics.Provider>
-        ) : (
-          children
-        )}
-        <ScrollRestoration nonce={nonce} />
-        <Scripts nonce={nonce} />
-      </body>
-    </html>
-  );
-}
-
 export default function App() {
   return <Outlet />;
 }
@@ -208,7 +156,7 @@ export function ErrorBoundary() {
   );
 }
 
-/** @typedef {LoaderReturnData} RootLoader */
+/** @typedef {Class<loader>} RootLoader */
 
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
 /** @typedef {import('@remix-run/react').ShouldRevalidateFunction} ShouldRevalidateFunction */

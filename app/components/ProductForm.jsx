@@ -11,16 +11,16 @@ import {useAside} from './Aside';
 export function ProductForm({productOptions, selectedVariant}) {
   const navigate = useNavigate();
   const {open} = useAside();
-  
   return (
-    <div className="product-form mt-4">
+    <div className="product-form">
       {productOptions.map((option) => {
         // If there is only a single value in the option values, don't display the option
         if (option.optionValues.length === 1) return null;
 
         return (
-          <div className="product-options flex gap-1" key={option.name}>
-            <div>
+          <div className="product-options" key={option.name}>
+            <h5>{option.name}</h5>
+            <div className="product-options-grid">
               {option.optionValues.map((value) => {
                 const {
                   name,
@@ -40,11 +40,18 @@ export function ProductForm({productOptions, selectedVariant}) {
                   // as an anchor tag
                   return (
                     <Link
+                      className="product-options-item"
                       key={option.name + name}
                       prefetch="intent"
                       preventScrollReset
                       replace
                       to={`/products/${handle}?${variantUriQuery}`}
+                      style={{
+                        border: selected
+                          ? '1px solid black'
+                          : '1px solid transparent',
+                        opacity: available ? 1 : 0.3,
+                      }}
                     >
                       <ProductOptionSwatch swatch={swatch} name={name} />
                     </Link>
@@ -62,6 +69,12 @@ export function ProductForm({productOptions, selectedVariant}) {
                         exists && !selected ? ' link' : ''
                       }`}
                       key={option.name + name}
+                      style={{
+                        border: selected
+                          ? '1px solid black'
+                          : '1px solid transparent',
+                        opacity: available ? 1 : 0.3,
+                      }}
                       disabled={!exists}
                       onClick={() => {
                         if (!selected) {
@@ -78,9 +91,29 @@ export function ProductForm({productOptions, selectedVariant}) {
                 }
               })}
             </div>
+            <br />
           </div>
         );
       })}
+      <AddToCartButton
+        disabled={!selectedVariant || !selectedVariant.availableForSale}
+        onClick={() => {
+          open('cart');
+        }}
+        lines={
+          selectedVariant
+            ? [
+                {
+                  merchandiseId: selectedVariant.id,
+                  quantity: 1,
+                  selectedVariant,
+                },
+              ]
+            : []
+        }
+      >
+        {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
+      </AddToCartButton>
     </div>
   );
 }
@@ -100,7 +133,7 @@ function ProductOptionSwatch({swatch, name}) {
   return (
     <div
       aria-label={name}
-      className="product-option-label-swatch  w-5 h-5 rounded-full border-2 border-gray-300"
+      className="product-option-label-swatch"
       style={{
         backgroundColor: color || 'transparent',
       }}

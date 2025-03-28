@@ -2,8 +2,24 @@
  * Configure Tailwind v4 in this file using CSS variables and directives:
  * https://tailwindcss.com/docs/v4-beta#css-first-configuration
  */
- @tailwind base;
- @tailwind components;
- @tailwind utilities;
- 
+
 @import 'tailwindcss';
+
+:root {
+    --custom-red: #ff0000;
+    --custom-grey: #e8e8e8;
+    --card-width: 315px;
+    --card-height: 340px;
+    --custom-width: 20px;
+    --dark: #111;
+    --navy: #0A4874;
+}
+
+.border-black {
+    box-shadow: 0 0 0 1px var(--navy);
+    border: 2px solid #FFF;
+}
+
+p {
+    margin: 8px 0;
+}
